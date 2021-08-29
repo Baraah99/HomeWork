@@ -118,17 +118,33 @@ public HashMap<String, Integer> getKidsCountByCategory(int period){
 		d = new Date((new Date()).getTime()- 365*DAY_IN_MS);
 	}
 	HashMap<String, Integer> kidsCountByCategory = new HashMap<String, Integer>();
+	
+	
+	/*
+	HashMap<String,Integer> kidsInCategory = new HashMap<String,Integer>();
+			for(Kid kid : kidRepo.getAllKids()) {
+				
+				for(String c : kid.getActiveCourses()) {
+					Category id = courseRepo.getCourseCategory(c);
+					kidsInCategory.put(id.getName(),kidsInCategory.get(id.getName())+1);
+				}
+			}
+	*/
 	for(String catId : getAllCategoriesIds()) {
 		int categoryKids = 0;
-		ArrayList<Course> courses = courseRepo.getCategoryCourses(catId);
+		List<Course> courses = courseRepo.getAllCourses();
 		for(Course c : courses) {
 			if(c.getStartDateTime().after(d)) {
-				categoryKids += c.getKidsIDs().size()+1;
+				//System.out.print(" the category one mapping : " +getCategoryById(catId).getName() + "==  " +categoryKids);
+				if(c.getCategoryId().equals(catId)) {
+					categoryKids = categoryKids + c.getKidsIDs().size();
+					kidsCountByCategory.put(getCategoryById(catId).getName(), categoryKids);
+				}
 			}
 		}
-		kidsCountByCategory.put(getCategoryById(catId).getName(), categoryKids);
+		
 	}
 	return kidsCountByCategory;
-}
+	}
 
 }
